@@ -2,13 +2,13 @@ import type { COBEOptions } from 'cobe'
 import { ArrowUpRight, Bot, BrainCircuit, GraduationCap, MapPin, Terminal } from 'lucide-react'
 import { useInView } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
-import { GlassCard } from '@/components/glass/GlassCard'
 import { CodeforcesIcon, GithubIcon, LeetcodeIcon, LinkedinIcon } from '@/components/icons'
+import { Panel } from '@/components/layout/Panel'
 import { Accent, Chip, Section } from '@/components/layout/Section'
 import { AnimatedCircularProgressBar } from '@/components/magicui/animated-circular-progress-bar'
 import { Globe, locationToAngles } from '@/components/magicui/globe'
 import { Marquee } from '@/components/magicui/marquee'
-import { about, cgpa, coursework, education, profiles, site, TONE_HEX } from '@/data/profile'
+import { about, cgpa, coursework, education, profiles, SIGNAL, site, TONE_HEX } from '@/data/profile'
 import { cn } from '@/lib/utils'
 
 const PROFILE_ICON = { coding: Terminal, ai: BrainCircuit, robotics: Bot }
@@ -29,14 +29,14 @@ const GLOBE: COBEOptions = {
   devicePixelRatio: 2,
   phi,
   theta: theta - 0.12,
-  dark: 1,
-  diffuse: 1.6,
+  dark: 0,
+  diffuse: 0.5,
   mapSamples: 18000,
-  mapBrightness: 5.5,
-  mapBaseBrightness: 0.04,
-  baseColor: [0.2, 0.26, 0.42],
-  markerColor: [94 / 255, 234 / 255, 212 / 255],
-  glowColor: [0.16, 0.24, 0.5],
+  mapBrightness: 1.6,
+  mapBaseBrightness: 0,
+  baseColor: [1, 1, 1],
+  markerColor: [35 / 255, 80 / 255, 1],
+  glowColor: [0.93, 0.93, 0.91],
   markers: [{ location: [site.coords.lat, site.coords.lng], size: 0.11 }],
 }
 
@@ -54,7 +54,7 @@ function LocalTime() {
     timeZone: site.timeZone,
   }).format(now)
   return (
-    <span className="font-mono text-[0.8rem] tracking-wide text-foreground/80">
+    <span className="rounded-md border border-line bg-muted px-2 py-1 font-mono text-[0.74rem] tracking-wide text-foreground/80">
       <time dateTime={now.toISOString()}>{time}</time> IST
     </span>
   )
@@ -68,8 +68,8 @@ function CgpaRing() {
       <AnimatedCircularProgressBar
         value={seen ? cgpa.value : 0}
         max={cgpa.max}
-        gaugePrimaryColor={TONE_HEX.mint}
-        gaugeSecondaryColor="rgb(255 255 255 / 0.08)"
+        gaugePrimaryColor={SIGNAL}
+        gaugeSecondaryColor="rgb(13 15 20 / 0.07)"
         className="size-[5.5rem]"
       >
         <span className="flex flex-col items-center leading-none">
@@ -106,16 +106,16 @@ export function About() {
     >
       <div className="grid gap-4 lg:grid-cols-6">
         {/* Bio */}
-        <GlassCard reveal tone="sky" className="flex flex-col lg:col-span-4 lg:row-span-2 lg:p-10">
+        <Panel reveal tone="sky" className="flex flex-col lg:col-span-4 lg:row-span-2 lg:p-10">
           <p className="eyebrow text-muted-foreground">Profile</p>
-          <p className="mt-6 text-[1.35rem] font-medium leading-[1.32] tracking-[-0.02em] text-foreground/95 sm:text-[1.72rem]">
+          <p className="mt-6 text-[1.3rem] font-medium leading-[1.35] tracking-[-0.025em] text-foreground sm:text-[1.6rem]">
             {about.paragraphs[0]}
           </p>
           <p className="mt-6 max-w-2xl text-[1.02rem] leading-relaxed text-muted-foreground">{about.paragraphs[1]}</p>
-          <dl className="mt-9 divide-y divide-white/[0.06] border-y border-white/[0.06]">
+          <dl className="mt-9 divide-y divide-line border-y border-line">
             {about.now.map(row => (
               <div key={row.label} className="grid gap-1 py-3.5 sm:grid-cols-[9rem_1fr] sm:gap-4">
-                <dt className="eyebrow pt-0.5 text-[0.66rem] text-mint/90">{row.label}</dt>
+                <dt className="eyebrow pt-0.5 text-[0.66rem] text-signal">{row.label}</dt>
                 <dd className="text-[0.95rem] text-foreground/85">{row.value}</dd>
               </div>
             ))}
@@ -125,14 +125,14 @@ export function About() {
               <Chip key={item}>{item}</Chip>
             ))}
           </div>
-        </GlassCard>
+        </Panel>
 
         {/* Location */}
-        <GlassCard reveal={90} tone="mint" className="relative min-h-[17.5rem] lg:col-span-2">
+        <Panel reveal={90} tone="mint" className="relative min-h-[17.5rem] lg:col-span-2">
           <div className="relative z-10 flex items-start justify-between gap-3">
             <div>
               <p className="eyebrow flex items-center gap-2 text-muted-foreground">
-                <MapPin className="size-3.5 text-mint" aria-hidden="true" />
+                <MapPin className="size-3.5 text-signal" aria-hidden="true" />
                 Based in
               </p>
               <p className="mt-3 text-[1.35rem] font-semibold leading-tight tracking-[-0.02em]">Rupnagar, Punjab</p>
@@ -145,14 +145,14 @@ export function About() {
           </div>
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-[#070a13]/90 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-white to-transparent"
           />
-        </GlassCard>
+        </Panel>
 
         {/* Education */}
-        <GlassCard reveal={180} tone="mint" className="lg:col-span-2">
+        <Panel reveal={180} tone="mint" className="lg:col-span-2">
           <p className="eyebrow flex items-center gap-2 text-muted-foreground">
-            <GraduationCap className="size-3.5 text-mint" aria-hidden="true" />
+            <GraduationCap className="size-3.5 text-signal" aria-hidden="true" />
             Education
           </p>
           <div className="mt-5 flex items-center gap-5">
@@ -163,7 +163,7 @@ export function About() {
               <p className="mt-1 font-mono text-[0.72rem] tracking-wide text-foreground/60">{degree.years}</p>
             </div>
           </div>
-          <dl className="mt-6 divide-y divide-white/[0.06] border-t border-white/[0.06] text-sm">
+          <dl className="mt-6 divide-y divide-line border-t border-line text-sm">
             {school.map(row => (
               <div key={row.degree} className="flex items-baseline justify-between gap-3 py-2.5">
                 <dt className="min-w-0">
@@ -174,20 +174,20 @@ export function About() {
               </div>
             ))}
           </dl>
-        </GlassCard>
+        </Panel>
 
         {/* Coding, AI & SDE, Robotics */}
         {profiles.map((profile, i) => {
           const Icon = PROFILE_ICON[profile.id]
           const hex = TONE_HEX[profile.tone]
           return (
-            <GlassCard key={profile.id} reveal={i * 90} tone={profile.tone} className="flex flex-col lg:col-span-2">
+            <Panel key={profile.id} reveal={i * 90} tone={profile.tone} className="flex flex-col lg:col-span-2">
               <div className="flex items-center justify-between">
                 <h3 className="eyebrow text-muted-foreground">{profile.eyebrow}</h3>
                 <span
                   aria-hidden="true"
-                  className="grid size-9 place-items-center rounded-xl border border-white/10 bg-white/[0.05]"
-                  style={{ color: hex, boxShadow: `0 0 22px -6px ${hex}` }}
+                  className="grid size-9 place-items-center rounded-lg border border-line bg-muted"
+                  style={{ color: hex }}
                 >
                   <Icon className="size-[1.05rem]" />
                 </span>
@@ -203,13 +203,13 @@ export function About() {
                       <span
                         className={cn(
                           'block h-1.5 rounded-full',
-                          band.active ? 'bg-mint shadow-[0_0_14px_rgb(94_234_212/0.7)]' : 'bg-white/10',
+                          band.active ? 'bg-mint' : 'bg-ink/10',
                         )}
                       />
                       <span
                         className={cn(
                           'mt-2 block font-mono text-[0.6rem] tracking-wide',
-                          band.active ? 'text-mint' : 'text-foreground/40',
+                          band.active ? 'font-semibold text-mint' : 'text-dim',
                         )}
                       >
                         {band.label}
@@ -218,7 +218,7 @@ export function About() {
                   ))}
                 </ol>
               ) : null}
-              <dl className="mt-6 divide-y divide-white/[0.06] border-y border-white/[0.06]">
+              <dl className="mt-6 divide-y divide-line border-y border-line">
                 {profile.rows.map(row => (
                   <div key={row.label} className="grid grid-cols-[5.25rem_1fr] gap-3 py-2.5">
                     <dt className="eyebrow pt-0.5 text-[0.62rem]" style={{ color: hex }}>
@@ -239,7 +239,7 @@ export function About() {
                           href={link.href}
                           target="_blank"
                           rel="noreferrer"
-                          className="group/link inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] px-3.5 py-2 text-[0.82rem] text-foreground/85 transition-colors hover:border-white/25 hover:bg-white/[0.09] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint"
+                          className="group/link inline-flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2 text-[0.82rem] font-medium text-foreground/85 transition-colors hover:border-ink/30 hover:text-foreground"
                         >
                           <LinkIcon className="size-3.5 text-foreground/60" />
                           {link.label}
@@ -253,12 +253,12 @@ export function About() {
                     )
                   })}
               </ul>
-            </GlassCard>
+            </Panel>
           )
         })}
 
         {/* Coursework */}
-        <GlassCard reveal className="flex flex-col justify-between overflow-hidden lg:col-span-6">
+        <Panel reveal className="flex flex-col justify-between overflow-hidden lg:col-span-6">
           <div className="flex items-baseline justify-between gap-4">
             <p className="eyebrow text-muted-foreground">Coursework</p>
             <p className="text-sm text-muted-foreground">Computer science, ML and optimisation</p>
@@ -268,7 +268,7 @@ export function About() {
               {coursework.map(course => (
                 <span
                   key={course}
-                  className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-[0.92rem] text-foreground/85"
+                  className="rounded-lg border border-line bg-white px-3.5 py-2 text-[0.9rem] text-foreground/85"
                 >
                   {course}
                 </span>
@@ -278,14 +278,14 @@ export function About() {
               {[...coursework].reverse().map(course => (
                 <span
                   key={course}
-                  className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[0.92rem] text-foreground/60"
+                  className="rounded-lg border border-dashed border-line-strong px-3.5 py-2 font-mono text-[0.8rem] text-muted-foreground"
                 >
                   {course}
                 </span>
               ))}
             </Marquee>
           </div>
-        </GlassCard>
+        </Panel>
       </div>
     </Section>
   )

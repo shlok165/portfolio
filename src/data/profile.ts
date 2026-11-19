@@ -425,9 +425,12 @@ export const nav = [
 export type SectionId = (typeof nav)[number]['id'] | 'top'
 
 export const TONE_HEX: Record<Tone, string> = {
-  mint: '#5eead4',
-  sky: '#5cc8ff',
-  iris: '#a495ff',
-  rose: '#ff8fc7',
-  amber: '#ffcf7a',
+  mint: '#0b8a6c',
+  sky: '#1f62e8',
+  iris: '#5b45dc',
+  rose: '#cf3470',
+  amber: '#b36a00',
 }
+
+/** The one brand accent, matching --signal in index.css. */
+export const SIGNAL = '#2350ff'

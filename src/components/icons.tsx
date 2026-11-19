@@ -50,16 +50,16 @@ export const CodeforcesIcon = make(siCodeforces.path, 'Codeforces')
 
 /** Logos for the scrolling strip in the Skills section. */
 export const techLogos = [
-  { name: 'Python', Icon: make(siPython.path, 'Python') },
-  { name: 'C++', Icon: make(siCplusplus.path, 'Cplusplus') },
-  { name: 'C', Icon: make(siC.path, 'C') },
-  { name: 'FastAPI', Icon: make(siFastapi.path, 'Fastapi') },
-  { name: 'React', Icon: make(siReact.path, 'React') },
-  { name: 'ROS', Icon: make(siRos.path, 'Ros') },
-  { name: 'Pandas', Icon: make(siPandas.path, 'Pandas') },
-  { name: 'Pytest', Icon: make(siPytest.path, 'Pytest') },
-  { name: 'Docker', Icon: make(siDocker.path, 'Docker') },
-  { name: 'Firebase', Icon: make(siFirebase.path, 'Firebase') },
-  { name: 'Django', Icon: make(siDjango.path, 'Django') },
-  { name: 'Git', Icon: make(siGit.path, 'Git') },
+  { name: 'Python', hex: `#${siPython.hex}`, Icon: make(siPython.path, 'Python') },
+  { name: 'C++', hex: `#${siCplusplus.hex}`, Icon: make(siCplusplus.path, 'Cplusplus') },
+  { name: 'C', hex: `#${siC.hex}`, Icon: make(siC.path, 'C') },
+  { name: 'FastAPI', hex: `#${siFastapi.hex}`, Icon: make(siFastapi.path, 'Fastapi') },
+  { name: 'React', hex: `#${siReact.hex}`, Icon: make(siReact.path, 'React') },
+  { name: 'ROS', hex: `#${siRos.hex}`, Icon: make(siRos.path, 'Ros') },
+  { name: 'Pandas', hex: `#${siPandas.hex}`, Icon: make(siPandas.path, 'Pandas') },
+  { name: 'Pytest', hex: `#${siPytest.hex}`, Icon: make(siPytest.path, 'Pytest') },
+  { name: 'Docker', hex: `#${siDocker.hex}`, Icon: make(siDocker.path, 'Docker') },
+  { name: 'Firebase', hex: `#${siFirebase.hex}`, Icon: make(siFirebase.path, 'Firebase') },
+  { name: 'Django', hex: `#${siDjango.hex}`, Icon: make(siDjango.path, 'Django') },
+  { name: 'Git', hex: `#${siGit.hex}`, Icon: make(siGit.path, 'Git') },
 ]

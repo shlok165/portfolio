@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Backdrop, CursorGlow } from '@/components/layout/Backdrop'
+import { PageFrame } from '@/components/layout/Backdrop'
 import { MobileDock, Navbar } from '@/components/layout/Navbar'
 import { ScrollProgress } from '@/components/magicui/scroll-progress'
 import { About } from '@/components/sections/About'
@@ -47,9 +47,8 @@ export default function App() {
       >
         Skip to content
       </a>
-      <Backdrop />
-      <CursorGlow />
-      <ScrollProgress className="z-[60] h-0.5 from-mint via-sky to-iris" />
+      <PageFrame />
+      <ScrollProgress className="z-[60] h-0.5 from-signal via-signal to-sky" />
       <Navbar active={active} onOpenCommand={() => {
           setCommandLoaded(true)
           setCommandOpen(true)

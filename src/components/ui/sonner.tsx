@@ -2,11 +2,11 @@ import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon
 import type { CSSProperties } from "react"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 
-// shadcn/ui toaster, fixed to the dark theme (this site has no theme switch).
+// shadcn/ui toaster, fixed to the light theme (this site has no theme switch).
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
-      theme="dark"
+      theme="light"
       className="toaster group"
       icons={{
         success: <CircleCheckIcon className="size-4" />,
@@ -17,10 +17,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "rgb(12 16 28 / 0.86)",
+          "--normal-bg": "rgb(255 255 255 / 0.92)",
           "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "rgb(255 255 255 / 0.12)",
-          "--border-radius": "1rem",
+          "--normal-border": "var(--line)",
+          "--border-radius": "0.75rem",
         } as CSSProperties
       }
       toastOptions={{

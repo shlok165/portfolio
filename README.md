@@ -1,6 +1,8 @@
 # Shlok Vaidya — portfolio
 
-A single-page portfolio: React 19, Vite, Tailwind CSS v4 and Motion, with a glass (frosted and liquid) visual language over WebGL aurora backgrounds.
+A single-page portfolio: React 19, Vite, Tailwind CSS v4 and Motion. Light, technical look: paper background, white hairline panels, Geist and Geist Mono, one blue accent, and diagram panels on an engineering grid.
+
+The first iteration (dark liquid-glass theme) is saved in git as the tag `v1-dark-glass`: `git checkout v1-dark-glass` to see it.
 
 ## Run it
 
@@ -47,10 +49,10 @@ The build uses relative asset paths, so `dist/` works at a domain root or under 
 ```
 src/
   data/profile.ts          all content
-  index.css                design tokens, the glass recipe, reveal animation
+  index.css                design tokens, panel / grid utilities, reveal animation
   components/
-    glass/GlassCard.tsx    the frosted panel used everywhere
-    layout/                background, navigation, command menu, section wrapper
+    layout/Panel.tsx       the white panel used everywhere
+    layout/                page frame, navigation, command menu, section wrapper
     sections/              Hero, About, Experience, Projects, Skills, Contact
     visuals/               the three animated project diagrams
     reactbits/             components imported from React Bits
@@ -58,13 +60,13 @@ src/
     ui/                    shadcn/ui primitives
 ```
 
-One rule worth knowing before editing: a glass panel must animate itself, never sit inside a wrapper that fades or has a CSS `filter`. An ancestor with `opacity < 1` or `filter` cuts the panel off from the page behind it and the backdrop blur disappears. `GlassCard` has a `reveal` prop for this.
+Colours live as tokens at the top of `src/index.css` (`--paper`, `--ink`, `--signal` for the blue accent, and five per-item tones). `TONE_HEX` and `SIGNAL` in `profile.ts` mirror them for places that need a raw colour (charts, the globe).
 
 ## Credits
 
 Imported open-source components, kept in their own folders with local changes noted at the top of each changed file:
 
-- [React Bits](https://reactbits.dev) (MIT + Commons Clause): DarkVeil, SoftAurora, GlassSurface, SpotlightCard, RotatingText, DecryptedText, Magnet
-- [Magic UI](https://magicui.design) (MIT): AnimatedBeam, Globe, Marquee, NumberTicker, BorderBeam, BlurFade, AnimatedCircularProgressBar, DotPattern, ScrollProgress, AnimatedShinyText, Particles
+- [React Bits](https://reactbits.dev) (MIT + Commons Clause): SpotlightCard, RotatingText, DecryptedText
+- [Magic UI](https://magicui.design) (MIT): Terminal, FlickeringGrid, AnimatedBeam, Globe, Marquee, NumberTicker, BlurFade, AnimatedCircularProgressBar, ScrollProgress
 - [shadcn/ui](https://ui.shadcn.com) (MIT): command menu, dialog, toaster
-- [Lenis](https://lenis.darkroom.engineering) smooth scrolling, [Motion](https://motion.dev) animation, [cobe](https://cobe.vercel.app) globe, [Lucide](https://lucide.dev) and [Simple Icons](https://simpleicons.org) icons, Geist and Instrument Serif typefaces
+- [Lenis](https://lenis.darkroom.engineering) smooth scrolling, [Motion](https://motion.dev) animation, [cobe](https://cobe.vercel.app) globe, [Lucide](https://lucide.dev) and [Simple Icons](https://simpleicons.org) icons, Geist and Geist Mono typefaces

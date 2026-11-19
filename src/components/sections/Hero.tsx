@@ -1,21 +1,18 @@
-import { ArrowDown, ArrowUpRight, Mail } from 'lucide-react'
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import { useRef } from 'react'
-import { GlassCard } from '@/components/glass/GlassCard'
+import { ArrowDown, ArrowUpRight, FileText, Mail } from 'lucide-react'
+import { motion, useReducedMotion } from 'motion/react'
 import { GithubIcon, LinkedinIcon } from '@/components/icons'
-import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text'
-import { DotPattern } from '@/components/magicui/dot-pattern'
+import { Crosshair } from '@/components/layout/Section'
+import { FlickeringGrid } from '@/components/magicui/flickering-grid'
 import { NumberTicker } from '@/components/magicui/number-ticker'
-import Magnet from '@/components/reactbits/Magnet'
+import { AnimatedSpan, Terminal, TypingAnimation } from '@/components/magicui/terminal'
 import RotatingText from '@/components/reactbits/RotatingText'
-import SoftAurora from '@/components/reactbits/SoftAurora'
-import { hero, site, socials, stats } from '@/data/profile'
+import { hero, projects, moreWork, site, socials, stats } from '@/data/profile'
 import { useScrollTo } from '@/lib/scroll'
 import { cn } from '@/lib/utils'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-/** Letters rise out of a blur, one after another. */
+/** Letters rise into place, one after another. */
 function Letters({ text, delay, className }: { text: string; delay: number; className?: string }) {
   const reduce = useReducedMotion()
   return (
@@ -24,9 +21,9 @@ function Letters({ text, delay, className }: { text: string; delay: number; clas
         <motion.span
           key={i}
           className="inline-block will-change-transform"
-          initial={reduce ? false : { y: '0.32em', opacity: 0, filter: 'blur(16px)' }}
-          animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 1, delay: delay + i * 0.05, ease: EASE }}
+          initial={reduce ? false : { y: '0.4em', opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.9, delay: delay + i * 0.04, ease: EASE }}
         >
           {char}
         </motion.span>
@@ -35,211 +32,216 @@ function Letters({ text, delay, className }: { text: string; delay: number; clas
   )
 }
 
-const GLASS_PILL =
-  'glass glass-edge relative flex h-12 items-center gap-2 rounded-full text-[0.95rem] font-medium transition-colors hover:bg-white/[0.07]'
+const BUTTON =
+  'group inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4.5 text-[0.92rem] font-medium transition-[background-color,border-color,box-shadow] duration-200'
+const PRIMARY = cn(BUTTON, 'max-sm:flex-[1_1_45%] bg-ink text-white shadow-[0_8px_20px_-10px_rgb(13_15_20/0.6)] hover:bg-ink/85')
+const SECONDARY = cn(BUTTON, 'border border-line-strong bg-white text-foreground hover:border-ink/40')
 
 const iconLinks = [
   { label: 'GitHub', href: socials.github, Icon: GithubIcon },
   { label: 'LinkedIn', href: socials.linkedin, Icon: LinkedinIcon },
 ].filter(link => link.href)
 
+const repoNames = projects.map(project => project.repo.split('/').pop() ?? project.slug)
+
+/** A short shell session that doubles as a summary. */
+function WhoAmI() {
+  return (
+    <Terminal title="shlok@iitrpr: ~" className="font-mono text-[0.8rem] leading-relaxed shadow-[var(--panel-shadow)]">
+      <TypingAnimation duration={45} className="text-[0.8rem] text-foreground">
+        $ whoami
+      </TypingAnimation>
+      <AnimatedSpan className="text-[0.8rem] text-muted-foreground">
+        <span>
+          shlok vaidya · b.tech ai &amp; data engineering · iit ropar &apos;28
+        </span>
+      </AnimatedSpan>
+      <TypingAnimation duration={45} className="mt-2 text-[0.8rem] text-foreground">
+        $ cat focus.txt
+      </TypingAnimation>
+      <AnimatedSpan className="text-[0.8rem] text-mint">
+        <span>✓ retrieval systems (RAG) with eval sets</span>
+      </AnimatedSpan>
+      <AnimatedSpan className="text-[0.8rem] text-mint">
+        <span>✓ ai agents with function calling</span>
+      </AnimatedSpan>
+      <AnimatedSpan className="text-[0.8rem] text-mint">
+        <span>✓ ros robotics and iot data pipelines</span>
+      </AnimatedSpan>
+      <TypingAnimation duration={45} className="mt-2 text-[0.8rem] text-foreground">
+        $ ls ~/projects
+      </TypingAnimation>
+      <AnimatedSpan className="text-[0.8rem] text-signal">
+        <span className="flex flex-col">
+          {repoNames.map(name => (
+            <span key={name} className="truncate">
+              {name}/
+            </span>
+          ))}
+          <span className="text-dim">+{moreWork.length} more on github</span>
+        </span>
+      </AnimatedSpan>
+      <TypingAnimation duration={45} className="mt-2 text-[0.8rem] text-foreground">
+        $ echo $STATUS
+      </TypingAnimation>
+      <AnimatedSpan className="text-[0.8rem] text-foreground">
+        <span className="flex items-center gap-2">
+          <span aria-hidden="true" className="size-1.5 animate-pulse-dot rounded-full bg-live text-live" />
+          {site.availability.toLowerCase()}
+          <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[0.5em] animate-caret bg-ink/70" />
+        </span>
+      </AnimatedSpan>
+    </Terminal>
+  )
+}
+
 export function Hero() {
   const scrollTo = useScrollTo()
   const reduce = useReducedMotion()
-  const ref = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const lift = useTransform(scrollYProgress, [0, 1], [0, -70])
-  const horizon = useTransform(scrollYProgress, [0, 1], [0, 150])
 
-  /*
-   * Entrance animation, applied to each element itself. Glass elements must not
-   * sit inside a fading wrapper: an ancestor with opacity < 1 would switch their
-   * backdrop blur off until the fade finished.
-   */
   const rise = (delay: number) => ({
-    initial: reduce ? false : { y: 18, opacity: 0 },
+    initial: reduce ? false : { y: 14, opacity: 0 },
     animate: { y: 0, opacity: 1 },
-    transition: { duration: 0.9, delay, ease: EASE },
+    transition: { duration: 0.8, delay, ease: EASE },
   })
 
   return (
-    <section ref={ref} id="top" className="relative flex min-h-svh flex-col overflow-x-clip">
-      {/* Aurora horizon: sits behind the stat bar so the glass has light to bend. */}
-      <motion.div
-        aria-hidden="true"
-        style={{ y: horizon }}
-        className="pointer-events-none absolute inset-x-0 bottom-[-30%] h-[82%]"
-      >
-        <SoftAurora
-          color1="#5cc8ff"
-          color2="#a495ff"
-          brightness={1.05}
-          bandHeight={0.6}
-          bandSpread={1.25}
-          speed={0.5}
-          mouseInfluence={0.18}
-          clickPulse={false}
-        />
-      </motion.div>
-      <DotPattern
-        aria-hidden="true"
-        width={26}
-        height={26}
-        cr={1}
-        className="mask-radial absolute inset-0 h-full w-full fill-white/[0.14]"
-      />
+    <section id="top" className="relative overflow-x-clip pt-24 md:pt-28">
+      {/* Flickering grid behind the hero, faded out towards the edges. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[44rem] mask-radial">
+        <FlickeringGrid squareSize={3} gridGap={7} flickerChance={0.18} color="#2350ff" maxOpacity={0.16} />
+      </div>
 
-      <motion.div
-        style={{ y: lift }}
-        className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center px-5 pb-8 pt-28 text-center sm:px-8 md:pt-36"
-      >
-        <motion.p
-          {...rise(0.05)}
-          className="glass glass-edge relative inline-flex items-center gap-3 rounded-full py-1.5 pl-3.5 pr-4 text-[0.82rem]"
-        >
-          <span aria-hidden="true" className="size-2 animate-pulse-dot rounded-full bg-mint text-mint" />
-          <AnimatedShinyText className="mx-0 text-foreground/80 dark:text-foreground/80">
-            {site.availability}
-          </AnimatedShinyText>
-          <span aria-hidden="true" className="h-3.5 w-px bg-white/15" />
-          <span className="text-muted-foreground">{site.classOf}</span>
-        </motion.p>
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 sm:px-8">
+        <div className="grid items-center gap-12 py-10 lg:grid-cols-12 lg:gap-10 lg:py-16">
+          <div className="lg:col-span-7">
+            <motion.p
+              {...rise(0.05)}
+              className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white py-1.5 pl-3 pr-3.5 font-mono text-[0.72rem] text-muted-foreground shadow-[var(--panel-shadow)]"
+            >
+              <span aria-hidden="true" className="size-2 animate-pulse-dot rounded-full bg-live text-live" />
+              <span className="text-foreground">{site.availability}</span>
+              <span aria-hidden="true" className="h-3 w-px bg-line-strong" />
+              {site.classOf}
+            </motion.p>
 
-        <h1
-          aria-label={site.name}
-          className="mt-8 text-[clamp(4.2rem,21vw,6.5rem)] font-semibold leading-[0.86] tracking-[-0.055em] sm:text-[clamp(5.5rem,13.5vw,10.25rem)]"
-        >
-          <Letters text={site.firstName} delay={0.15} className="block sm:mr-[0.2em] sm:inline-block" />
-          <Letters
-            text={site.lastName}
-            delay={0.4}
-            className="block pr-[0.06em] font-serif text-[1.08em] font-normal italic tracking-[-0.03em] sm:inline-block"
-          />
-        </h1>
+            <h1
+              aria-label={site.name}
+              className="mt-7 text-[clamp(3.4rem,15vw,4.6rem)] font-semibold leading-[0.92] tracking-[-0.055em] sm:text-[clamp(4.6rem,9vw,6.4rem)]"
+            >
+              <Letters text={site.firstName} delay={0.1} className="mr-[0.22em]" />
+              <Letters text={site.lastName} delay={0.3} />
+            </h1>
 
-        <motion.p
-          {...rise(0.85)}
-          className="mt-8 flex w-full flex-wrap items-baseline justify-center gap-x-[0.35em] text-[1.45rem] font-medium tracking-[-0.02em] text-foreground/90 sm:text-[2rem]"
-        >
-          <span>I build</span>
-          <RotatingText
-            texts={hero.rotating}
-            effect="blur"
-            rotationInterval={2600}
-            staggerDuration={0.018}
-            staggerFrom="first"
-            mainClassName="font-serif text-[1.16em] italic font-normal text-mint"
-          />
-        </motion.p>
+            <motion.p {...rise(0.55)} className="mt-5 font-mono text-[0.8rem] uppercase tracking-[0.12em] text-muted-foreground">
+              B.Tech · AI &amp; Data Engineering · IIT Ropar
+            </motion.p>
 
-        <motion.p
-          {...rise(1)}
-          className="mx-auto mt-5 max-w-xl text-[1.02rem] leading-relaxed text-muted-foreground sm:text-lg"
-        >
-          {hero.lead}
-        </motion.p>
+            <motion.p
+              {...rise(0.65)}
+              className="mt-7 flex flex-wrap items-baseline gap-x-[0.3em] text-[1.45rem] font-medium tracking-[-0.025em] sm:text-[1.8rem]"
+            >
+              <span>I build</span>
+              <RotatingText
+                texts={hero.rotating}
+                effect="blur"
+                rotationInterval={2600}
+                staggerDuration={0.018}
+                staggerFrom="first"
+                mainClassName="marker text-signal"
+              />
+            </motion.p>
 
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <motion.div {...rise(1.12)}>
-            <Magnet padding={50} magnetStrength={3}>
+            <motion.p {...rise(0.75)} className="mt-4 max-w-xl text-[1.02rem] leading-relaxed text-muted-foreground">
+              {hero.lead}
+            </motion.p>
+
+            <motion.div {...rise(0.85)} className="mt-8 flex flex-wrap items-center gap-2.5">
               <a
                 href="#projects"
                 onClick={event => {
                   event.preventDefault()
                   scrollTo('projects')
                 }}
-                className="group flex h-12 items-center gap-2 rounded-full bg-foreground pl-6 pr-5 text-[0.95rem] font-semibold text-primary-foreground shadow-[0_0_0_1px_rgb(255_255_255/0.2),0_18px_50px_-12px_rgb(92_200_255/0.55)] transition-shadow duration-500 hover:shadow-[0_0_0_1px_rgb(255_255_255/0.3),0_22px_60px_-10px_rgb(164_149_255/0.75)]"
+                className={PRIMARY}
               >
-                See my work
-                <ArrowDown
-                  className="size-4 transition-transform duration-300 group-hover:translate-y-0.5"
-                  aria-hidden="true"
-                />
+                View projects
+                <ArrowDown className="size-4 transition-transform group-hover:translate-y-0.5" aria-hidden="true" />
               </a>
-            </Magnet>
-          </motion.div>
-          {__HAS_RESUME__ ? (
-            <motion.a
-              {...rise(1.2)}
-              href={site.resume}
-              target="_blank"
-              rel="noreferrer"
-              className={cn(GLASS_PILL, 'group pl-6 pr-5')}
-            >
-              Résumé
-              <ArrowUpRight
-                className="size-4 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
-                aria-hidden="true"
-              />
-            </motion.a>
-          ) : (
-            <motion.a
-              {...rise(1.2)}
-              href="#contact"
-              onClick={event => {
-                event.preventDefault()
-                scrollTo('contact')
-              }}
-              className={cn(GLASS_PILL, 'pl-5 pr-6')}
-            >
-              <Mail className="size-4 text-muted-foreground" aria-hidden="true" />
-              Get in touch
-            </motion.a>
-          )}
-          {iconLinks.map(({ label, href, Icon }, i) => (
-            <motion.a
-              key={label}
-              {...rise(1.28 + i * 0.08)}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={label}
-              className={cn(GLASS_PILL, 'w-12 justify-center text-foreground/75 hover:text-foreground')}
-            >
-              <Icon className="size-[1.15rem]" />
-            </motion.a>
-          ))}
-        </div>
-      </motion.div>
-
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-28 sm:px-8 md:pb-12">
-        <GlassCard reveal={1250} className="grid grid-cols-2 p-0 sm:p-0 lg:grid-cols-4">
-          {stats.map((stat, i) => (
-            <div
-              key={stat.label}
-              className={cn(
-                'relative px-5 py-5 text-left sm:px-7 sm:py-6',
-                i % 2 === 1 && 'border-l border-white/[0.07]',
-                i >= 2 && 'border-t border-white/[0.07] lg:border-t-0',
-                i === 2 && 'lg:border-l',
+              {__HAS_RESUME__ ? (
+                <a href={site.resume} target="_blank" rel="noreferrer" className={cn(SECONDARY, 'max-sm:flex-[1_1_45%]')}>
+                  <FileText className="size-4 text-muted-foreground" aria-hidden="true" />
+                  Résumé
+                  <ArrowUpRight className="size-3.5 text-dim" aria-hidden="true" />
+                </a>
+              ) : (
+                <a href={`mailto:${site.email}`} className={cn(SECONDARY, 'max-sm:flex-[1_1_45%]')}>
+                  <Mail className="size-4 text-muted-foreground" aria-hidden="true" />
+                  Email me
+                </a>
               )}
-            >
-              <p className="eyebrow text-[0.64rem] text-muted-foreground">{stat.label}</p>
-              <p className="mt-2.5 flex items-baseline gap-1 text-[1.9rem] font-semibold tracking-[-0.03em] sm:text-[2.5rem]">
-                {stat.prefix ? (
-                  <span className="mr-1 font-mono text-[0.42em] font-medium tracking-normal text-mint">
-                    {stat.prefix.trim()}
-                  </span>
-                ) : null}
-                {stat.value < 10 && !stat.decimals ? (
-                  // Counting up to a rank would flash "1th, 2th…" on the way.
-                  <span>{stat.value}</span>
-                ) : (
-                  <NumberTicker
-                    value={stat.value}
-                    decimalPlaces={stat.decimals ?? 0}
-                    delay={1.3 + i * 0.12}
-                    className="tracking-[-0.03em] text-foreground dark:text-foreground"
-                  />
+              {iconLinks.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
+                  className={cn(SECONDARY, 'w-11 justify-center px-0 text-foreground/70 hover:text-foreground')}
+                >
+                  <Icon className="size-[1.05rem]" />
+                </a>
+              ))}
+            </motion.div>
+          </div>
+
+          <motion.div {...rise(0.5)} className="lg:col-span-5">
+            <WhoAmI />
+          </motion.div>
+        </div>
+
+        {/* Key numbers, laid out like a spec table. */}
+        <div data-reveal="" className="relative mb-6 md:-mx-8">
+          <Crosshair className="absolute -top-[5.5px] -left-[5.5px] hidden md:block" />
+          <Crosshair className="absolute -top-[5.5px] -right-[5.5px] hidden md:block" />
+          <dl className="grid grid-cols-2 border-y border-line bg-white/70 backdrop-blur-[2px] lg:grid-cols-4">
+            {stats.map((stat, i) => (
+              <div
+                key={stat.label}
+                className={cn(
+                  'px-5 py-5 sm:px-8 sm:py-6',
+                  i % 2 === 1 && 'border-l border-line',
+                  i >= 2 && 'border-t border-line lg:border-t-0',
+                  i === 2 && 'lg:border-l',
                 )}
-                {stat.suffix ? (
-                  <span className="text-[0.48em] font-medium tracking-normal text-muted-foreground">{stat.suffix}</span>
-                ) : null}
-              </p>
-              <p className="mt-1 text-[0.82rem] text-muted-foreground">{stat.note}</p>
-            </div>
-          ))}
-        </GlassCard>
+              >
+                <dt className="eyebrow text-[0.64rem] text-muted-foreground">{stat.label}</dt>
+                <dd className="mt-2.5 flex items-baseline gap-1 text-[1.85rem] font-semibold tracking-[-0.035em] sm:text-[2.3rem]">
+                  {stat.prefix ? (
+                    <span className="mr-1 font-mono text-[0.42em] font-medium tracking-normal text-signal">
+                      {stat.prefix.trim()}
+                    </span>
+                  ) : null}
+                  {stat.value < 10 && !stat.decimals ? (
+                    // Counting up to a rank would flash "1th, 2th…" on the way.
+                    <span>{stat.value}</span>
+                  ) : (
+                    <NumberTicker
+                      value={stat.value}
+                      decimalPlaces={stat.decimals ?? 0}
+                      delay={0.9 + i * 0.1}
+                      className="tracking-[-0.035em] text-foreground"
+                    />
+                  )}
+                  {stat.suffix ? (
+                    <span className="text-[0.48em] font-medium tracking-normal text-muted-foreground">{stat.suffix}</span>
+                  ) : null}
+                </dd>
+                <dd className="mt-1 font-mono text-[0.72rem] text-muted-foreground">{stat.note}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </section>
   )

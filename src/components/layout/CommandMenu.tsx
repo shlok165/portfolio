@@ -55,7 +55,7 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
       onOpenChange={onOpenChange}
       title="Command menu"
       description="Jump to a section or run an action"
-      className="glass rounded-3xl! border-white/10 bg-transparent p-1.5 ring-0 [--glass-blur:28px] [--glass-tint:rgb(10_13_24/0.72)] sm:max-w-lg"
+      className="rounded-2xl! border border-line bg-white/95 p-1.5 shadow-[0_30px_70px_-30px_rgb(13_15_20/0.45)] ring-0 backdrop-blur-xl sm:max-w-lg"
     >
       <Command className="bg-transparent">
         <CommandInput placeholder="Where to? Try “projects” or “email”…" />

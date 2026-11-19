@@ -3,8 +3,6 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
-@import "@fontsource/instrument-serif/400.css";
-@import "@fontsource/instrument-serif/400-italic.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -12,7 +10,6 @@
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-heading: var(--font-sans);
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, monospace;
-  --font-serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -33,14 +30,22 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Aurora accents: the only saturated colours on the page. */
+  /* Ink scale and the one brand accent. */
+  --color-ink: var(--ink);
+  --color-dim: var(--dim);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-paper: var(--paper);
+  --color-signal: var(--signal);
+  --color-signal-soft: var(--signal-soft);
+  --color-live: var(--live);
+
+  /* Per-item tones (projects, profiles, charts). Dark enough to read on white. */
   --color-mint: var(--mint);
   --color-sky: var(--sky);
   --color-iris: var(--iris);
   --color-rose: var(--rose);
   --color-amber: var(--amber);
-  --color-ink: var(--ink);
-  --color-dim: var(--dim);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -51,12 +56,10 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Magic UI animations */
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
-  --animate-shiny-text: shiny-text 8s infinite;
 
   /* Site animations */
   --animate-pulse-dot: pulse-dot 2.4s ease-out infinite;
@@ -79,24 +82,13 @@
       transform: translateY(calc(-100% - var(--gap)));
     }
   }
-  @keyframes shiny-text {
-    0%,
-    90%,
-    100% {
-      background-position: calc(-100% - var(--shiny-width)) 0;
-    }
-    30%,
-    60% {
-      background-position: calc(100% + var(--shiny-width)) 0;
-    }
-  }
   @keyframes pulse-dot {
     0% {
-      box-shadow: 0 0 0 0 color-mix(in oklab, currentColor 55%, transparent);
+      box-shadow: 0 0 0 0 color-mix(in oklab, currentColor 45%, transparent);
     }
     70%,
     100% {
-      box-shadow: 0 0 0 9px transparent;
+      box-shadow: 0 0 0 7px transparent;
     }
   }
   @keyframes caret {
@@ -116,62 +108,45 @@
   }
 }
 
-/*
- * The site is dark-only: glass needs deep colour behind it to read as glass.
- * Both :root and .dark resolve to the same palette so shadcn / Magic UI
- * components that use `dark:` variants keep working.
- */
-:root,
-.dark {
-  --ink: #04060c;
-  --background: #04060c;
-  --foreground: #edf1fa;
-  --dim: #6b7690;
+/* Light, technical: paper background, white panels, hairlines, one blue accent. */
+:root {
+  --paper: #f6f6f3;
+  --ink: #0d0f14;
+  --dim: #868b95;
+  --line: #e3e3dd;
+  --line-strong: #cdcdc5;
 
-  --card: #0b0f1a;
-  --card-foreground: #edf1fa;
-  --popover: #0c101c;
-  --popover-foreground: #edf1fa;
-  --primary: #edf1fa;
-  --primary-foreground: #070a12;
-  --secondary: rgb(255 255 255 / 0.07);
-  --secondary-foreground: #edf1fa;
-  --muted: rgb(255 255 255 / 0.06);
-  --muted-foreground: #9aa5bb;
-  --accent: rgb(255 255 255 / 0.08);
-  --accent-foreground: #edf1fa;
-  --destructive: #fb7185;
-  --border: rgb(255 255 255 / 0.1);
-  --input: rgb(255 255 255 / 0.14);
-  --ring: #5eead4;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: #ffffff;
+  --secondary: #efefea;
+  --secondary-foreground: var(--ink);
+  --muted: #f1f1ed;
+  --muted-foreground: #565c68;
+  --accent: #efefea;
+  --accent-foreground: var(--ink);
+  --destructive: #d92d20;
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: #2350ff;
   --radius: 0.75rem;
 
-  --mint: #5eead4;
-  --sky: #5cc8ff;
-  --iris: #a495ff;
-  --rose: #ff8fc7;
-  --amber: #ffcf7a;
+  --signal: #2350ff;
+  --signal-soft: #e9edff;
+  --live: #12a150;
 
-  /* Glass recipe, shared by every frosted surface. */
-  --glass-tint: rgb(13 17 30 / 0.42);
-  --glass-blur: 18px;
-  --glass-sheen: linear-gradient(
-    140deg,
-    rgb(255 255 255 / 0.085) 0%,
-    rgb(255 255 255 / 0.03) 38%,
-    rgb(255 255 255 / 0.012) 100%
-  );
-  --glass-edge: linear-gradient(
-    140deg,
-    rgb(255 255 255 / 0.3) 0%,
-    rgb(255 255 255 / 0.07) 28%,
-    rgb(255 255 255 / 0.04) 62%,
-    rgb(255 255 255 / 0.16) 100%
-  );
-  --glass-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.07), 0 30px 60px -32px rgb(0 0 0 / 0.8),
-    0 2px 6px -2px rgb(0 0 0 / 0.4);
+  --mint: #0b8a6c;
+  --sky: #1f62e8;
+  --iris: #5b45dc;
+  --rose: #cf3470;
+  --amber: #b36a00;
 
-  --aurora: linear-gradient(100deg, var(--mint) 0%, var(--sky) 38%, var(--iris) 72%, var(--rose) 100%);
+  --panel-shadow: 0 1px 0 rgb(13 15 20 / 0.03), 0 14px 32px -26px rgb(13 15 20 / 0.28);
 }
 
 @layer base {
@@ -181,11 +156,11 @@
 
   html {
     @apply font-sans;
-    color-scheme: dark;
+    color-scheme: light;
     background: var(--background);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    scrollbar-color: rgb(255 255 255 / 0.18) transparent;
+    scrollbar-color: rgb(13 15 20 / 0.22) transparent;
     scrollbar-width: thin;
   }
 
@@ -195,7 +170,7 @@
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--mint) 35%, transparent);
+    background: var(--signal);
     color: #fff;
   }
 
@@ -228,98 +203,77 @@ html.lenis body {
   overscroll-behavior: contain;
 }
 
-/* ---------- Glass ---------- */
+/* ---------- Utilities ---------- */
 
-/* Frosted panel: tint + sheen + backdrop blur + soft drop shadow. */
-@utility glass {
-  background-color: var(--glass-tint);
-  background-image: var(--glass-sheen);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(165%);
-  backdrop-filter: blur(var(--glass-blur)) saturate(165%);
-  box-shadow: var(--glass-shadow);
+/* White panel with a hairline border; used by Panel and a few one-offs. */
+@utility panel {
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--panel-shadow);
 }
 
-/* Light-catching hairline. Needs a positioned parent with a border radius. */
-@utility glass-edge {
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: var(--glass-edge);
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask:
-      linear-gradient(#000 0 0) content-box exclude,
-      linear-gradient(#000 0 0);
-    pointer-events: none;
-  }
+/* Frosted bar for the floating navigation. */
+@utility frost {
+  background-color: rgb(255 255 255 / 0.74);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgb(13 15 20 / 0.09);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.8) inset, 0 10px 30px -18px rgb(13 15 20 / 0.35);
 }
 
-@utility text-aurora {
-  background-image: var(--aurora);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* Engineering-paper grid, for diagram panels. */
+@utility blueprint {
+  background-color: #fbfbf9;
+  background-image:
+    linear-gradient(to right, rgb(35 80 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(35 80 255 / 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -1px -1px;
 }
 
-@utility bg-aurora {
-  background-image: var(--aurora);
+/* Highlighter stroke behind an emphasised word. */
+@utility marker {
+  background-image: linear-gradient(transparent 62%, var(--signal-soft) 62%, var(--signal-soft) 94%, transparent 94%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 /* Fade both horizontal edges of a scrolling strip. */
 @utility mask-fade-x {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-}
-
-@utility mask-fade-y {
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
 }
 
 @utility mask-radial {
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 72%);
-  mask-image: radial-gradient(ellipse at center, #000 20%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse at center, #000 10%, transparent 70%);
 }
 
 @utility eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-/*
- * Scroll reveal for glass panels. It animates the panel itself (never a wrapper):
- * an ancestor with opacity or filter would cut the panel off from the page
- * behind it and the backdrop blur would disappear. See lib/reveal.ts.
- */
+/* Scroll reveal, applied to the element itself. See lib/reveal.ts. */
 [data-reveal] {
   opacity: 0;
-  translate: 0 22px;
-  scale: 0.985;
+  translate: 0 16px;
   transition:
-    opacity 0.9s var(--ease-out-expo),
-    translate 0.9s var(--ease-out-expo),
-    scale 0.9s var(--ease-out-expo);
+    opacity 0.8s var(--ease-out-expo),
+    translate 0.8s var(--ease-out-expo);
   transition-delay: var(--reveal-delay, 0ms);
 }
 [data-reveal][data-revealed] {
   opacity: 1;
   translate: none;
-  scale: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
     opacity: 1;
     translate: none;
-    scale: none;
     transition: none;
   }
 

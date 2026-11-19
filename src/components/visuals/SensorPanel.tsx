@@ -51,11 +51,11 @@ function Tile({ channel, index, show }: { channel: Channel; index: number; show:
   const spikeX = channel.spike !== undefined ? (channel.spike / (N - 1)) * W : 0
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.035] p-3.5">
+    <div className="rounded-xl border border-line bg-white p-3.5">
       <div className="flex items-baseline justify-between">
         <span className="text-[0.74rem] text-muted-foreground">{channel.name}</span>
         {channel.spike !== undefined ? (
-          <span className="rounded-full bg-rose/15 px-1.5 py-0.5 font-mono text-[0.54rem] tracking-wider text-rose">
+          <span className="rounded bg-rose/10 px-1.5 py-0.5 font-mono text-[0.54rem] tracking-wider text-rose">
             FLAGGED
           </span>
         ) : (
@@ -64,12 +64,12 @@ function Tile({ channel, index, show }: { channel: Channel; index: number; show:
       </div>
       <p className="mt-1 text-[1.35rem] font-semibold leading-none tracking-[-0.03em]">
         {channel.value}
-        <span className="ml-1 text-[0.66rem] font-normal tracking-normal text-foreground/45">{channel.unit}</span>
+        <span className="ml-1 text-[0.66rem] font-normal tracking-normal text-muted-foreground">{channel.unit}</span>
       </p>
       <svg viewBox={`0 0 ${W} ${H}`} className="mt-2.5 h-12 w-full overflow-visible" preserveAspectRatio="none">
         <defs>
           <linearGradient id={`fill-${index}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={channel.color} stopOpacity="0.28" />
+            <stop offset="0%" stopColor={channel.color} stopOpacity="0.16" />
             <stop offset="100%" stopColor={channel.color} stopOpacity="0" />
           </linearGradient>
         </defs>
@@ -109,18 +109,18 @@ export function SensorPanel() {
 
   return (
     <figure ref={ref} className="flex h-full flex-col justify-center gap-4">
-      <div className="flex items-center justify-between font-mono text-[0.62rem] tracking-[0.18em] text-foreground/45">
+      <div className="flex items-center justify-between font-mono text-[0.62rem] tracking-[0.18em] text-muted-foreground">
         <span className="flex items-center gap-2">
-          <span className="size-1.5 animate-pulse-dot rounded-full bg-mint text-mint" />
+          <span className="size-1.5 animate-pulse-dot rounded-full bg-live text-live" />
           SENSOR FEED
         </span>
         <span>SIMULATED</span>
       </div>
-      <ol aria-hidden="true" className="flex flex-wrap items-center gap-x-1.5 gap-y-2 font-mono text-[0.66rem] text-foreground/75">
+      <ol aria-hidden="true" className="flex flex-wrap items-center gap-x-1.5 gap-y-2 font-mono text-[0.66rem] text-foreground/80">
         {['Sensors', 'Calibration', 'Wireless link', 'Firebase', 'Dashboard'].map((step, i) => (
           <li key={step} className="flex items-center gap-1.5">
-            {i > 0 ? <span className="text-mint/70">→</span> : null}
-            <span className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-2 py-1.5">{step}</span>
+            {i > 0 ? <span className="text-signal">→</span> : null}
+            <span className="rounded-md border border-line bg-white px-2 py-1.5">{step}</span>
           </li>
         ))}
       </ol>

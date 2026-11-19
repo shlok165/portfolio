@@ -21,17 +21,17 @@ export function ReconFunnel() {
     <figure ref={ref} className="flex h-full flex-col justify-center gap-6">
       {/* One case = an invoice, its payment and the bank transaction */}
       <div aria-hidden="true">
-        <p className="font-mono text-[0.62rem] tracking-[0.18em] text-foreground/45">ONE CASE, THREE RECORDS</p>
+        <p className="font-mono text-[0.62rem] tracking-[0.18em] text-muted-foreground">ONE CASE, THREE RECORDS</p>
         <div className="mt-3 flex items-center gap-1.5 font-mono text-[0.72rem] sm:gap-2">
           {['INV-0045', 'PAY-0045', 'TXN-0045'].map((id, i) => (
             <Fragment key={id}>
               {i > 0 ? (
                 <svg viewBox="0 0 28 8" className="h-2 w-4 shrink-0 sm:w-7">
-                  <path d="M0 4h28" className="animate-flow stroke-mint/60" strokeWidth="1.5" strokeDasharray="4 4" fill="none" />
+                  <path d="M0 4h28" className="animate-flow stroke-signal/70" strokeWidth="1.5" strokeDasharray="4 4" fill="none" />
                 </svg>
               ) : null}
-              <span className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.04] px-2 py-2.5 text-center text-foreground/85">
-                <span className="block text-[0.54rem] tracking-[0.16em] text-foreground/40">{['INVOICE', 'PAYMENT', 'BANK'][i]}</span>
+              <span className="flex-1 rounded-lg border border-line bg-white px-2 py-2.5 text-center text-foreground">
+                <span className="block text-[0.54rem] tracking-[0.16em] text-muted-foreground">{['INVOICE', 'PAYMENT', 'BANK'][i]}</span>
                 {id}
               </span>
             </Fragment>
@@ -40,7 +40,7 @@ export function ReconFunnel() {
       </div>
 
       <div>
-        <div className="flex items-baseline justify-between font-mono text-[0.62rem] tracking-[0.18em] text-foreground/45">
+        <div className="flex items-baseline justify-between font-mono text-[0.62rem] tracking-[0.18em] text-muted-foreground">
           <span>WHERE 200 CASES GET RESOLVED</span>
           <span>APPROX.</span>
         </div>
@@ -58,9 +58,9 @@ export function ReconFunnel() {
               transition={{ duration: 1.1, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
               style={{ flexBasis: 0 }}
             >
-              <span className="absolute inset-0 bg-linear-to-b from-white/35 to-transparent" />
+              <span className="absolute inset-0 bg-linear-to-b from-white/25 to-transparent" />
               {stage.share >= 20 ? (
-                <span className="absolute inset-y-0 left-3 flex items-center font-mono text-[0.78rem] font-semibold text-[#06121a]">
+                <span className="absolute inset-y-0 left-3 flex items-center font-mono text-[0.78rem] font-semibold text-white">
                   {stage.share}%
                 </span>
               ) : null}
@@ -73,27 +73,27 @@ export function ReconFunnel() {
         {stages.map((stage, i) => (
           <motion.li
             key={stage.name}
-            className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.03] px-3.5 py-2.5"
+            className="flex items-center gap-3 rounded-lg border border-line bg-white px-3.5 py-2.5"
             initial={false}
             animate={{ opacity: show ? 1 : 0, x: show ? 0 : 14 }}
             transition={{ duration: 0.7, delay: 0.35 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className={cn('font-mono text-[0.68rem] tracking-wider', stage.text)}>0{i + 1}</span>
             <span className="min-w-0 flex-1">
-              <span className="block text-[0.86rem] font-medium text-foreground/90">{stage.name}</span>
+              <span className="block text-[0.86rem] font-medium text-foreground">{stage.name}</span>
               <span className="block truncate text-[0.74rem] text-muted-foreground">{stage.detail}</span>
             </span>
-            <span className="font-mono text-[0.8rem] tabular-nums text-foreground/80">~{stage.share}%</span>
+            <span className="font-mono text-[0.8rem] tabular-nums text-foreground">~{stage.share}%</span>
           </motion.li>
         ))}
       </ol>
       {/* Confidence score weighting used by the fuzzy pass */}
       <div aria-hidden="true">
-        <p className="font-mono text-[0.62rem] tracking-[0.18em] text-foreground/45">MATCH SCORE WEIGHTS</p>
-        <div className="mt-3 flex gap-1 font-mono text-[0.68rem] text-foreground/75">
-          <span className="basis-1/2 rounded-lg border border-white/[0.08] bg-white/[0.06] px-2.5 py-1.5">50% text</span>
-          <span className="basis-[30%] rounded-lg border border-white/[0.08] bg-white/[0.045] px-2.5 py-1.5">30% amount</span>
-          <span className="basis-1/5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5">20% date</span>
+        <p className="font-mono text-[0.62rem] tracking-[0.18em] text-muted-foreground">MATCH SCORE WEIGHTS</p>
+        <div className="mt-3 flex gap-1 font-mono text-[0.68rem] text-foreground/80">
+          <span className="basis-1/2 rounded-md border border-signal/30 bg-signal-soft px-2.5 py-1.5">50% text</span>
+          <span className="basis-[30%] rounded-md border border-line bg-white px-2.5 py-1.5">30% amount</span>
+          <span className="basis-1/5 rounded-md border border-line bg-white/60 px-2.5 py-1.5">20% date</span>
         </div>
       </div>
       <figcaption className="sr-only">Share of cases resolved at each pass of the reconciliation engine.</figcaption>
