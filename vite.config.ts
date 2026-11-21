@@ -8,8 +8,7 @@ const root = import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Relative asset paths, so the build works at a domain root and under a
-  // sub-path such as https://<user>.github.io/portfolio/ without changes.
+  // Relative asset paths: the build works at a domain root or under a sub-path.
   base: './',
   plugins: [react(), tailwindcss()],
   resolve: {
@@ -17,8 +16,8 @@ export default defineConfig({
     dedupe: ['react', 'react-dom'],
   },
   optimizeDeps: {
-    // Pre-bundle everything in a single pass so the dev server never ends up
-    // with two copies of React after discovering a dependency late.
+    // Pre-bundle every runtime dependency in one pass, so the dev server never
+    // discovers one late and ends up with two copies of React ("Invalid hook call").
     include: [
       'react',
       'react-dom',
@@ -27,19 +26,28 @@ export default defineConfig({
       'react/jsx-dev-runtime',
       'motion/react',
       'lucide-react',
-      '@radix-ui/react-slot',
       '@radix-ui/react-dialog',
       'cmdk',
       'sonner',
       'lenis',
-      'cobe',
-      'simple-icons',
-      'class-variance-authority',
+      'gsap',
+      'gsap/ScrollTrigger',
+      'ogl',
       'cn',
     ],
   },
+  build: {
+    target: 'es2022',
+    rollupOptions: {
+      // Two pages from one data file: the site and the printable résumé.
+      input: {
+        main: path.resolve(root, 'index.html'),
+        resume: path.resolve(root, 'resume.html'),
+      },
+    },
+  },
   define: {
-    // The résumé button only renders when public/resume.pdf actually exists.
+    // Download buttons only render when public/resume.pdf exists at build time.
     __HAS_RESUME__: JSON.stringify(existsSync(path.resolve(root, 'public/resume.pdf'))),
   },
 })

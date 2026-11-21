@@ -1,36 +1,29 @@
-import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon } from "lucide-react"
-import type { CSSProperties } from "react"
-import { Toaster as Sonner, type ToasterProps } from "sonner"
+// Adapted from shadcn/ui (MIT): Sonner toaster, restyled to the site tokens.
+import { CircleAlert, CircleCheck, Info, LoaderCircle } from 'lucide-react'
+import type { CSSProperties } from 'react'
+import { Toaster as Sonner, type ToasterProps } from 'sonner'
 
-// shadcn/ui toaster, fixed to the light theme (this site has no theme switch).
-const Toaster = ({ ...props }: ToasterProps) => {
+export function Toaster(props: ToasterProps) {
   return (
     <Sonner
       theme="light"
-      className="toaster group"
       icons={{
-        success: <CircleCheckIcon className="size-4" />,
-        info: <InfoIcon className="size-4" />,
-        warning: <TriangleAlertIcon className="size-4" />,
-        error: <OctagonXIcon className="size-4" />,
-        loading: <Loader2Icon className="size-4 animate-spin" />,
+        success: <CircleCheck className="size-4 text-success" />,
+        info: <Info className="size-4 text-accent" />,
+        error: <CircleAlert className="size-4 text-danger" />,
+        loading: <LoaderCircle className="size-4 animate-spin text-ink-3" />,
       }}
       style={
         {
-          "--normal-bg": "rgb(255 255 255 / 0.92)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--line)",
-          "--border-radius": "0.75rem",
+          '--normal-bg': 'var(--surface)',
+          '--normal-text': 'var(--ink)',
+          '--normal-border': 'var(--line-strong)',
+          '--border-radius': '14px',
+          fontFamily: 'var(--font-sans)',
         } as CSSProperties
       }
-      toastOptions={{
-        classNames: {
-          toast: "cn-toast backdrop-blur-xl",
-        },
-      }}
+      toastOptions={{ classNames: { toast: 'shadow-3!', description: 'text-ink-3!' } }}
       {...props}
     />
   )
 }
-
-export { Toaster }

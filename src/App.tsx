@@ -1,31 +1,35 @@
+import { MotionConfig } from 'motion/react'
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { PageFrame } from '@/components/layout/Backdrop'
-import { MobileDock, Navbar } from '@/components/layout/Navbar'
-import { ScrollProgress } from '@/components/magicui/scroll-progress'
-import { About } from '@/components/sections/About'
-import { Contact, Footer } from '@/components/sections/Contact'
-import { Experience } from '@/components/sections/Experience'
-import { Hero } from '@/components/sections/Hero'
-import { Projects } from '@/components/sections/Projects'
-import { Skills } from '@/components/sections/Skills'
+import { Cursor } from '@/components/chrome/Cursor'
+import { Footer } from '@/components/chrome/Footer'
+import { Navbar } from '@/components/chrome/Navbar'
+import { ScrollProgress } from '@/components/chrome/ScrollProgress'
 import { Toaster } from '@/components/ui/sonner'
 import { nav } from '@/data/profile'
-import { useActiveSection } from '@/hooks/use-active-section'
-import { useRevealObserver } from '@/lib/reveal'
+import { About } from '@/features/about/About'
+import { Contact } from '@/features/contact/Contact'
+import { Hero } from '@/features/hero/Hero'
+import { Projects } from '@/features/projects/Projects'
+import { Skills } from '@/features/skills/Skills'
+import { Timeline } from '@/features/timeline/Timeline'
+import { useActiveSection } from '@/lib/hooks'
 import { SmoothScroll } from '@/lib/scroll'
 
-// The command menu pulls in the dialog and search libraries, so it loads on first use.
-const CommandMenu = lazy(() =>
-  import('@/components/layout/CommandMenu').then(module => ({ default: module.CommandMenu })),
-)
+// cmdk + its dialog load on first use (shortcut or button), not with the page.
+const CommandMenu = lazy(() => import('@/features/command/CommandMenu').then(m => ({ default: m.CommandMenu })))
 
 const SECTION_IDS = nav.map(item => item.id)
+
 
 export default function App() {
   const [commandOpen, setCommandOpen] = useState(false)
   const [commandLoaded, setCommandLoaded] = useState(false)
   const active = useActiveSection(SECTION_IDS)
-  useRevealObserver()
+
+  const openCommand = () => {
+    setCommandLoaded(true)
+    setCommandOpen(true)
+  }
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -40,35 +44,34 @@ export default function App() {
   }, [])
 
   return (
-    <SmoothScroll>
-      <a
-        href="#about"
-        className="sr-only z-[100] rounded-full bg-foreground px-4 py-2 text-sm font-medium text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
-      >
-        Skip to content
-      </a>
-      <PageFrame />
-      <ScrollProgress className="z-[60] h-0.5 from-signal via-signal to-sky" />
-      <Navbar active={active} onOpenCommand={() => {
-          setCommandLoaded(true)
-          setCommandOpen(true)
-        }} />
-      <main className="relative z-10">
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Skills />
-        <Contact />
-      </main>
-      <Footer />
-      <MobileDock active={active} />
-      {commandLoaded ? (
-        <Suspense fallback={null}>
-          <CommandMenu open={commandOpen} onOpenChange={setCommandOpen} />
-        </Suspense>
-      ) : null}
-      <Toaster position="bottom-center" />
-    </SmoothScroll>
+    // reducedMotion="user": Motion drops transform/layout animation for visitors who ask for less motion.
+    <MotionConfig reducedMotion="user">
+      <SmoothScroll>
+        <a
+          href="#about"
+          className="sr-only z-[100] rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Skip to content
+        </a>
+        <ScrollProgress />
+        <Navbar active={active} onOpenCommand={openCommand} />
+        <main>
+          <Hero />
+          <About />
+          <Timeline />
+          <Projects />
+          <Skills />
+          <Contact />
+        </main>
+        <Footer />
+        {commandLoaded ? (
+          <Suspense fallback={null}>
+            <CommandMenu open={commandOpen} onOpenChange={setCommandOpen} />
+          </Suspense>
+        ) : null}
+        <Cursor />
+        <Toaster position="bottom-center" />
+      </SmoothScroll>
+    </MotionConfig>
   )
 }

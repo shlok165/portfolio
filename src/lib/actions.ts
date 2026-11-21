@@ -6,8 +6,10 @@ export async function copyEmail() {
   try {
     await navigator.clipboard.writeText(site.email)
     toast.success('Email copied', { description: site.email })
+    return true
   } catch {
     location.href = `mailto:${site.email}`
+    return false
   }
 }
 
