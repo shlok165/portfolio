@@ -178,10 +178,19 @@ export const timeline: TimelineItem[] = [
 
 export type Metric = { value: number; decimals?: number; prefix?: string; suffix?: string; label: string }
 
+export type TrackId = 'software' | 'robotics'
+
+/** The two tracks the Projects section is split into, in display order. */
+export const tracks: { id: TrackId; title: string; blurb: string }[] = [
+  { id: 'software', title: 'Software', blurb: 'Development and AI: retrieval systems, agents, speech and vision models, web apps.' },
+  { id: 'robotics', title: 'Robotics', blurb: 'ROS, simulation, edge devices and sensor pipelines.' },
+]
+
 export type ProjectSlug = 'rag' | 'recon' | 'water'
 
 export type Project = {
   slug: ProjectSlug
+  track: TrackId
   index: string
   title: string
   kicker: string
@@ -198,6 +207,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: 'rag',
+    track: 'software',
     index: '01',
     title: 'Ask IIT Ropar',
     kicker: 'RAG campus assistant',
@@ -220,6 +230,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'recon',
+    track: 'software',
     index: '02',
     title: 'AI Reconciliation & Settlement Agent',
     kicker: 'Deterministic-first matching engine',
@@ -241,6 +252,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'water',
+    track: 'robotics',
     index: '03',
     title: 'AquaIntegrity',
     kicker: 'IoT water quality monitoring',
@@ -257,12 +269,13 @@ export const projects: Project[] = [
   },
 ]
 
-export type Repo = { title: string; blurb: string; stack: string[]; year: string; url: string }
+export type Repo = { title: string; track: TrackId; blurb: string; stack: string[]; year: string; url: string }
 
 /** Smaller repositories, shown as a compact list under the featured projects. */
 export const moreWork: Repo[] = [
   {
     title: 'Hindi–English Code-Switched ASR',
+    track: 'software',
     blurb: 'wav2vec 2.0 with a CTC head and KenLM beam search on MUCS 2021. Final model: 20.44 WER on the blind set.',
     stack: ['Transformers', 'wav2vec 2.0', 'KenLM'],
     year: '2026',
@@ -270,6 +283,7 @@ export const moreWork: Repo[] = [
   },
   {
     title: 'Temporal models for EchoNet-Dynamic',
+    track: 'software',
     blurb: 'Ejection-fraction estimation from echocardiography video with swappable temporal models, including a state-space block at 3.96 validation MAE.',
     stack: ['State-space models', 'Mamba', 'Medical video'],
     year: '2026',
@@ -277,6 +291,7 @@ export const moreWork: Repo[] = [
   },
   {
     title: 'Interval',
+    track: 'software',
     blurb: 'Quiz portal for the sAIDE website at IIT Ropar, built as a Human–Computer Interaction course project with role-based access.',
     stack: ['HCI', 'SQLite'],
     year: '2026',
@@ -284,6 +299,7 @@ export const moreWork: Repo[] = [
   },
   {
     title: 'Smart Farm Intrusion Detection',
+    track: 'robotics',
     blurb: 'Ultrasonic trigger, ESP32-CAM capture and YOLOv8n classification to detect and deter wildlife, with a live web dashboard.',
     stack: ['YOLOv8n', 'ESP32-CAM', 'Raspberry Pi'],
     year: '2025',
@@ -291,6 +307,7 @@ export const moreWork: Repo[] = [
   },
   {
     title: 'Bipedal RL Training Platform',
+    track: 'robotics',
     blurb: 'Simulation platform for training bipedal robots with custom reinforcement-learning algorithms and configurable robot dimensions.',
     stack: ['Python', 'Reinforcement learning', 'Gazebo'],
     year: '2025',
@@ -298,6 +315,7 @@ export const moreWork: Repo[] = [
   },
   {
     title: 'Autonomous Warehouse Surveillance',
+    track: 'robotics',
     blurb: 'ROS-based autonomous surveillance for warehouses, split into onboard control and offboard monitoring workspaces.',
     stack: ['ROS', 'Robotics'],
     year: '2025',
