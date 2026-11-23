@@ -7,12 +7,12 @@ import { openProject } from '@/features/projects/store'
 import { dur, ease, spring } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
-type Work = { key: string; title: string; year: string; stack: string[]; slug?: ProjectSlug; url: string }
+type Work = { key: string; title: string; year?: string; stack: string[]; slug?: ProjectSlug; url?: string }
 
 // Every project on the page, featured first.
 const WORK: Work[] = [
   ...projects.map(p => ({ key: p.slug, title: p.title, year: p.year, stack: p.stack, slug: p.slug, url: p.repo })),
-  ...moreWork.map(r => ({ key: r.url, title: r.title, year: r.year, stack: r.stack, url: r.url })),
+  ...moreWork.map(r => ({ key: r.url ?? r.title, title: r.title, year: r.year, stack: r.stack, url: r.url })),
 ]
 
 const usage = (skill: string) => WORK.filter(w => w.stack.includes(skill))
@@ -153,11 +153,11 @@ export function Skills() {
           <ul>
             {WORK.map(w => {
               const lit = !focus || related.has(w.key)
+              const Row = w.slug || w.url ? 'a' : 'div'
               return (
                 <li key={w.key}>
-                  <a
-                    href={w.slug ? `#projects/${w.slug}` : w.url}
-                    {...(w.slug ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                  <Row
+                    {...(w.slug ? { href: `#projects/${w.slug}` } : w.url ? { href: w.url, target: '_blank', rel: 'noopener noreferrer' } : {})}
                     onClick={e => {
                       if (!w.slug) return
                       e.preventDefault()
@@ -179,10 +179,12 @@ export function Skills() {
                     <span className="num ml-auto font-mono text-2xs text-ink-3">{w.year}</span>
                     {w.slug ? (
                       <Plus className="size-3.5 shrink-0 text-ink-3 group-hover:text-accent" aria-label="Open case study" />
-                    ) : (
+                    ) : w.url ? (
                       <ArrowUpRight className="size-3.5 shrink-0 text-ink-3 group-hover:text-accent" aria-label="Opens GitHub in a new tab" />
+                    ) : (
+                      <span className="size-3.5 shrink-0" aria-hidden="true" />
                     )}
-                  </a>
+                  </Row>
                 </li>
               )
             })}

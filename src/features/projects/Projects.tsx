@@ -107,26 +107,26 @@ function RepoList({ repos }: { repos: Repo[] }) {
   const reduce = useReducedMotion()
   return (
     <div className="mt-10">
-      <p className="label border-b border-line pb-3">More on GitHub</p>
+      <p className="label border-b border-line pb-3">More projects</p>
       <ul>
-        {repos.map((repo, i) => (
+        {repos.map((repo, i) => {
+          const Row = repo.url ? 'a' : 'div'
+          return (
           <motion.li
-            key={repo.url}
+            key={repo.url ?? repo.title}
             initial={{ opacity: 0, y: reduce ? 0 : 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-5% 0px' }}
             transition={{ duration: dur[4], ease: ease.out, delay: reduce ? 0 : i * stagger.base }}
             className="border-b border-line"
           >
-            <a
-              href={repo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group grid gap-x-8 gap-y-2 py-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto] sm:items-baseline"
+            <Row
+              {...(repo.url ? { href: repo.url, target: '_blank', rel: 'noopener noreferrer' } : {})}
+              className="group grid gap-x-8 gap-y-2 py-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_6.5rem] sm:items-baseline"
             >
               <span className="flex items-baseline gap-3">
-                <span className="num font-mono text-xs text-ink-3">{repo.year}</span>
-                <span className="font-medium text-ink transition-colors duration-(--dur-2) group-hover:text-accent">{repo.title}</span>
+                {repo.year ? <span className="num font-mono text-xs text-ink-3">{repo.year}</span> : null}
+                <span className={cn('font-medium text-ink', repo.url && 'transition-colors duration-(--dur-2) group-hover:text-accent')}>{repo.title}</span>
               </span>
               <span className="text-sm text-ink-2">
                 {repo.blurb}
@@ -138,17 +138,24 @@ function RepoList({ repos }: { repos: Repo[] }) {
                   ))}
                 </span>
               </span>
-              <ArrowUpRight
-                aria-hidden="true"
-                className={cn(
-                  'hidden size-5 text-ink-3 transition-[transform,color] duration-(--dur-3) ease-out sm:block',
-                  'group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent',
-                )}
-              />
-              <span className="sr-only">(opens GitHub in a new tab)</span>
-            </a>
+              {repo.url ? (
+                <>
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className={cn(
+                      'hidden size-5 text-ink-3 transition-[transform,color] duration-(--dur-3) ease-out sm:block sm:justify-self-end',
+                      'group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent',
+                    )}
+                  />
+                  <span className="sr-only">(opens GitHub in a new tab)</span>
+                </>
+              ) : (
+                <span className="font-mono text-2xs text-ink-3 sm:justify-self-end">No public repo</span>
+              )}
+            </Row>
           </motion.li>
-        ))}
+          )
+        })}
       </ul>
     </div>
   )

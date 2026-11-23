@@ -269,7 +269,8 @@ export const projects: Project[] = [
   },
 ]
 
-export type Repo = { title: string; track: TrackId; blurb: string; stack: string[]; year: string; url: string }
+/** `url` and `year` are optional: a project without a public repo renders as a plain row. */
+export type Repo = { title: string; track: TrackId; blurb: string; stack: string[]; year?: string; url?: string }
 
 /** Smaller repositories, shown as a compact list under the featured projects. */
 export const moreWork: Repo[] = [
@@ -320,6 +321,13 @@ export const moreWork: Repo[] = [
     stack: ['ROS', 'Robotics'],
     year: '2025',
     url: 'https://github.com/shlok165/autonomous_warehouse_surveillance',
+  },
+  {
+    title: 'Swarm Navigation in a Warehouse',
+    track: 'robotics',
+    blurb:
+      'Two or more robots spawned in a simulated warehouse navigate together under distributed control, with no central controller, to search for a target object (a red box).',
+    stack: ['Multi-robot systems', 'Distributed control', 'Simulation'],
   },
 ]
 

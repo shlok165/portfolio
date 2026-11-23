@@ -69,9 +69,14 @@ export function CommandMenu({ open, onOpenChange }: CommandMenuProps) {
                   }
                 />
               ))}
-              {moreWork.map(r => (
-                <Item key={r.url} value={`repo ${r.title} ${r.stack.join(' ')}`} icon={FolderGit2} label={r.title} hint="GitHub" onSelect={() => run(() => openLink(r.url))} />
-              ))}
+              {moreWork.map(r => {
+                const url = r.url
+                return url ? (
+                  <Item key={url} value={`repo ${r.title} ${r.stack.join(' ')}`} icon={FolderGit2} label={r.title} hint="GitHub" onSelect={() => run(() => openLink(url))} />
+                ) : (
+                  <Item key={r.title} value={`project ${r.title} ${r.stack.join(' ')}`} icon={FolderGit2} label={r.title} hint="No repo" onSelect={() => run(() => scrollTo(`projects-${r.track}`))} />
+                )
+              })}
             </CommandGroup>
 
             <CommandGroup heading="Actions">
